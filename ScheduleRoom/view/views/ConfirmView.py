@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 
 class ConfirmDataApp:
-    def _init_(self, root):
+    def __init__(self, root):
         self.root = root
         self.root.title("Confirmação de Dados")
 
