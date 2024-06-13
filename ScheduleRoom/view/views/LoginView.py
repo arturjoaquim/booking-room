@@ -1,6 +1,5 @@
 from tkinter import *
 from componentes.PrimaryButtonCP import PrimaryButton
-import sqlite3
 
 class Application:
     def __init__(self, master=None):
