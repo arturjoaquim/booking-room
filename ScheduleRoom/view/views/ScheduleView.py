@@ -7,63 +7,60 @@ from scheduleroom.view.componentsFactory.InputFactory import InputFactory
 from scheduleroom.view.componentsFactory.LabelFactory import LabelFactory
 
 class ScheduleView(AbstractView):
-    def __init__(self, master):
-        super.__init__(master)
-
-     #   self.primeiroContainer = Frame(master, background="#0B5394")
-      #  self.primeiroContainer.pack(side=LEFT, anchor=NW)
-
-       # self.segundoContainer = Frame(master, background="#0B5394")
-        #self.segundoContainer.pack(side=RIGHT,anchor=NE)
-        self.navbar = ttk.Notebook(self.main_container)
-        self.navbar.add()
-
-        self.BtCalendario = ButtonFactory.createPrimaryButton("Data", self.calendario, self.main_container)
-        self.BtCalendario.pack()
     
-        self.caixa_data = InputFactory.createInputText(self.main_container)
-        self.caixa_data.pack()
+    def __init__(self, root):
 
-        self.periodo_label = LabelFactory.createNormalLabel(self.main_container, "Labs:")
-        self.periodo_label.pack()
+        super().__init__(root)
+        self.main_container.pack(expand=True)
+        self.formGrid = tk.Frame(self.main_container)
+        self.formGrid.pack(expand=True, ipadx=5, ipady=5)
 
-        self.lab_listbox = Listbox(self.main_container, height=4)
+        self.BtCalendario = ButtonFactory.createPrimaryButton("Data", self.calendario, self.formGrid)
+        self.BtCalendario.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
+    
+        self.caixa_data = InputFactory.createInputText(self.formGrid)
+        self.caixa_data.grid(row=0, column=1, sticky="ew", padx=5, pady=5)
+
+        self.periodSelected = tk.StringVar()
+        self.manha = ttk.Radiobutton(self.formGrid, text="Manha", value="Manha", variable=self.periodSelected)
+        self.manha.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
+        self.noite = ttk.Radiobutton(self.formGrid, text="Noite", value="Noite", variable=self.periodSelected)
+        self.noite.grid(row=1, column=1, padx=5, pady=5, sticky="ew")
+
+        self.labs_label = LabelFactory.createNormalLabel(self.formGrid, "Labs:")
+        self.labs_label.grid(row=2, column=0, columnspan=2, sticky="ew", padx=5, pady=5)
+
+        self.lab_listbox = tk.Listbox(self.formGrid, height=4)
         self.lab_listbox.insert(tk.END, "LabI")
         self.lab_listbox.insert(tk.END, "LabII")
         self.lab_listbox.insert(tk.END, "LabIII")
         self.lab_listbox.insert(tk.END, "LabIV")
-        self.lab_listbox.pack()
 
-        self.select = Button(self.main_container, text="Selecionar", command=self.get_selection, background="#29a649", foreground="white")
-        self.select.pack(side=tk.BOTTOM, pady=10)
+        self.lab_listbox.grid(row=3, column=0, columnspan=2, sticky="ew", padx=5, pady=5)
 
-        self.manha= Button(self.main_container,text="Manhã", background="#29a649", foreground="white")
-        self.manha.pack(side=tk.LEFT)
-        self.noite= Button(self.main_container,text="Noite", background="#29a649", foreground="white")
-        self.noite.pack(side=tk.RIGHT)
+        self.submit = ButtonFactory.createPrimaryButton("Reservar Sala", self.get_selection, self.formGrid)
+        self.submit.grid(row=4,column=0, sticky="ew", columnspan=2, padx=5, pady=5)
+
+        self.next_page = ButtonFactory.createPrimaryButton("Ver Agenda", self.nav_to_booking_view, self.formGrid)
+        self.next_page.grid(row=5, column=0, sticky="ew", columnspan=2, padx=5, pady=5)
+        
 
     def calendario(self):
         self.calendario1 = Calendar(self.main_container,fg="blue", bg="gray", locale="pt_br")
-        self.calendario1.pack()
+        self.calendario1.pack(padx=5, pady=5)
 
-        self.calldata = Button(self.main_container,text="Inserir Data", command=self.print_data, background="#29a649", foreground="white")
-        self.calldata.pack()
+        self.calldata = ButtonFactory.createPrimaryButton("Inserir Data", self.print_data, self.main_container) 
+        self.calldata.pack(padx=5, pady=5)
 
     def print_data(self):
        dataIni = self.calendario1.get_date()
        self.calendario1.destroy()
-       self.caixa_data.delete(0, END)
-       self.caixa_data.insert(END, dataIni)
+       self.caixa_data.delete(0, tk.END)
+       self.caixa_data.insert(tk.END, dataIni)
        self.calldata.destroy()
         
     def get_selection(self):
         selected_period = self.lab_listbox.get(self.lab_listbox.curselection()[0])
 
-
-if (__name__ == "__main__"):
-
-    cadastro = Tk()
-    cadastro.configure(background="#0B5394")
-    cadastro.geometry("500x300")
-    ScheduleView(cadastro)  
-    cadastro.mainloop()
+    def nav_to_booking_view(self):
+        pass

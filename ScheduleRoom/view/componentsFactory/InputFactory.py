@@ -9,7 +9,7 @@ class InputFactory:
         inputText = Entry(parent)
         inputText["width"] = 30
         inputText["font"] = AbstractView.FONTE_PADRAO
-        inputText.pack(pady=5, padx=5)
+       # inputText.pack(pady=5, padx=5)
 
         return inputText
     
@@ -19,6 +19,6 @@ class InputFactory:
         inputSecret["width"] = 30
         inputSecret["font"] = AbstractView.FONTE_PADRAO
         inputSecret["show"] = "*"
-        inputSecret.pack(pady=5, padx=5)
+       # inputSecret.pack(pady=5, padx=5)
 
         return inputSecret

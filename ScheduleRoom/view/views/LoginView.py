@@ -19,19 +19,19 @@ class LoginView(AbstractView):
         self.nomeLabel.pack()
 
         self.nome = InputFactory.createInputText(self.main_container)
-        self.nome.pack()
+        self.nome.pack(pady=5)
 
         self.senhaLabel = LabelFactory.createNormalLabel(self.main_container, "Senha")
         self.senhaLabel.pack()
 
         self.senha = InputFactory.createInputSecret(self.main_container)
-        self.senha.pack()
+        self.senha.pack(pady=5)
 
         self.autenticar = ButtonFactory.createPrimaryButton("Fazer Login", self.verificaSenha, self.main_container)
-        self.autenticar.pack()
+        self.autenticar.pack(pady=10)
 
         self.mensagem = LabelFactory.createNormalLabel(self.main_container, "")
-        self.mensagem.pack()
+        self.mensagem.pack(pady=5)
 
         self.main_container.pack(expand=True)
 
