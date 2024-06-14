@@ -14,6 +14,11 @@ class BookingDAO(GenericDAO):
 
         return result # Utilizar um cara para converter as datas
 
+    def findAllBookings(self):
+        result = self.query_all("""SELECT * FROM RQST_BKNG BKNG""")
+
+        return result # Utilizar um cara para converter as datas
+
     def insertNewBooking(self, booking_DTO: BookingDTO):
 
         self.execute("""INSERT INTO rqst_bkng 

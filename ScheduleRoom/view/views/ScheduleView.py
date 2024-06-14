@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkcalendar import Calendar, DateEntry
 from scheduleroom.view.views.AbstractView import AbstractView
+from scheduleroom.view.views.QueryBookingView import QueryBookingView
 from scheduleroom.view.componentsFactory.ButtonFactory import ButtonFactory
 from scheduleroom.view.componentsFactory.InputFactory import InputFactory
 from scheduleroom.view.componentsFactory.LabelFactory import LabelFactory
@@ -77,7 +78,8 @@ class ScheduleView(AbstractView):
         self.selected_room_name = self.lab_listbox.get(self.lab_listbox.curselection()[0])
 
     def nav_to_booking_view(self):
-        pass
+        self.main_container.destroy()
+        QueryBookingView(self.root)
 
     def getAllRooms(self):
         conexao_db = ConnectionFactory.create_connection()
