@@ -7,6 +7,9 @@ from scheduleroom.view.componentsFactory.InputFactory import InputFactory
 from scheduleroom.view.componentsFactory.LabelFactory import LabelFactory
 from scheduleroom.model.ConnectionFactory import ConnectionFactory
 from scheduleroom.model.DAOs.RoomDAO import RoomDAO
+from scheduleroom.model.DTOs.BookingDTO import BookingDTO
+from scheduleroom.model.DAOs.BookingDAO import BookingDAO
+from datetime import date
 
 class ScheduleView(AbstractView):
     
@@ -49,7 +52,7 @@ class ScheduleView(AbstractView):
 
         
 
-        self.submit = ButtonFactory.createPrimaryButton("Reservar Sala", self.get_selection, self.formGrid)
+        self.submit = ButtonFactory.createPrimaryButton("Reservar Sala", self.submitBooking, self.formGrid)
         self.submit.grid(row=4,column=0, sticky="ew", columnspan=2, padx=5, pady=5)
 
         self.next_page = ButtonFactory.createPrimaryButton("Ver Agenda", self.nav_to_booking_view, self.formGrid)
@@ -64,14 +67,14 @@ class ScheduleView(AbstractView):
         self.calldata.pack(padx=5, pady=5)
 
     def print_data(self):
-       dataIni = self.calendario1.get_date()
+       self.dataIni = self.calendario1.get_date()
        self.calendario1.destroy()
        self.caixa_data.delete(0, tk.END)
-       self.caixa_data.insert(tk.END, dataIni)
+       self.caixa_data.insert(tk.END, self.dataIni)
        self.calldata.destroy()
         
     def get_selection(self):
-        selected_period = self.lab_listbox.get(self.lab_listbox.curselection()[0])
+        self.selected_room_name = self.lab_listbox.get(self.lab_listbox.curselection()[0])
 
     def nav_to_booking_view(self):
         pass
@@ -85,3 +88,31 @@ class ScheduleView(AbstractView):
             self.rooms = result
         else:
             self.rooms = None
+
+
+    def submitBooking(self):
+        self.get_selection()
+        try:
+            conexao_db = ConnectionFactory.create_connection()
+            room_dao = RoomDAO(conexao_db)
+
+            result = room_dao.findRoomByName(self.selected_room_name)
+            id_room = result[0]
+
+            conexao_db = ConnectionFactory.create_connection()
+            booking_dao = BookingDAO(conexao_db)
+
+            booking_dto = BookingDTO(room_id=id_room, record_date=str(date.today())[:10], booking_date=self.dataIni, booking_turn=self.periodSelected.get())
+
+            booking_dao.insertNewBooking(booking_dto)
+            self.sucess_message = LabelFactory.createNormalLabel(self.main_container, f"Sucesso! Sala {result[1]} reservada para {self.dataIni} durante a {self.periodSelected.get()}!")
+            self.sucess_message.pack()
+        except Exception as error:
+            self.error_message = LabelFactory.createNormalLabel(self.main_container, f"Falha ao reservar a sala {error}")
+            self.error_message.pack()
+
+
+        
+        
+        
+

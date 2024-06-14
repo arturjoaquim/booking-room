@@ -3,8 +3,6 @@ from scheduleroom.model.DTOs.BookingDTO import BookingDTO
 from scheduleroom.model.DAOs.BookingDAO import BookingDAO
 from scheduleroom.model.ConnectionFactory import ConnectionFactory
 
-print("teste")
-
 booking = BookingDAO(ConnectionFactory.create_connection())
 
 bookingList = []

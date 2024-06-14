@@ -17,7 +17,7 @@ class BookingDAO(GenericDAO):
     def insertNewBooking(self, booking_DTO: BookingDTO):
 
         self.execute("""INSERT INTO rqst_bkng 
-                     VALUES ((SELECT)), 
+                     VALUES ((SELECT MAX(id_bkng) + 1 FROM rqst_bkng), 
                      "Reserva-Test", ?, 1, "Reserva teste criada em tela.", ?, ?, ?)""", 
                      booking_DTO.room_id, booking_DTO.booking_date, booking_DTO.booking_turn, booking_DTO.record_date # Preciso de um cara para converter as datas
                     )
