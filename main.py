@@ -1,7 +1,4 @@
-from scheduleroom import BookingDAO;
-from scheduleroom import ConnectionFactory
-
-from scheduleroom.view.components.PrimaryButton import PrimaryButton
+from scheduleroom import BookingDAO, ConnectionFactory, LoginView
 
 print("teste")
 
