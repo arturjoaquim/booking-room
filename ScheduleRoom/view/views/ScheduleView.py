@@ -5,12 +5,16 @@ from scheduleroom.view.views.AbstractView import AbstractView
 from scheduleroom.view.componentsFactory.ButtonFactory import ButtonFactory
 from scheduleroom.view.componentsFactory.InputFactory import InputFactory
 from scheduleroom.view.componentsFactory.LabelFactory import LabelFactory
+from scheduleroom.model.ConnectionFactory import ConnectionFactory
+from scheduleroom.model.DAOs.RoomDAO import RoomDAO
 
 class ScheduleView(AbstractView):
     
     def __init__(self, root):
 
         super().__init__(root)
+        self.root = root
+        self.root.title("Booking Room - Reserva de Sala")
         self.main_container.pack(expand=True)
         self.formGrid = tk.Frame(self.main_container)
         self.formGrid.pack(expand=True, ipadx=5, ipady=5)
@@ -31,12 +35,19 @@ class ScheduleView(AbstractView):
         self.labs_label.grid(row=2, column=0, columnspan=2, sticky="ew", padx=5, pady=5)
 
         self.lab_listbox = tk.Listbox(self.formGrid, height=4)
-        self.lab_listbox.insert(tk.END, "LabI")
-        self.lab_listbox.insert(tk.END, "LabII")
-        self.lab_listbox.insert(tk.END, "LabIII")
-        self.lab_listbox.insert(tk.END, "LabIV")
 
-        self.lab_listbox.grid(row=3, column=0, columnspan=2, sticky="ew", padx=5, pady=5)
+        # CUIDADO MÁ PRÁTICA ABAIXO:
+        self.getAllRooms()
+        if self.rooms:
+            for row in self.rooms:
+                self.lab_listbox.insert(tk.END, row[1])
+
+            self.lab_listbox.grid(row=3, column=0, columnspan=2, sticky="ew", padx=5, pady=5)
+        else:
+            self.response_rooms = LabelFactory.createNormalLabel(self.formGrid, "Sem salas cadastradas")
+            self.response_rooms.grid(row=3, column=0, columnspan=2, sticky="ew", padx=5, pady=5)
+
+        
 
         self.submit = ButtonFactory.createPrimaryButton("Reservar Sala", self.get_selection, self.formGrid)
         self.submit.grid(row=4,column=0, sticky="ew", columnspan=2, padx=5, pady=5)
@@ -64,3 +75,13 @@ class ScheduleView(AbstractView):
 
     def nav_to_booking_view(self):
         pass
+
+    def getAllRooms(self):
+        conexao_db = ConnectionFactory.create_connection()
+        room_dao = RoomDAO(conexao_db)
+        result = room_dao.findAllRooms()
+
+        if result:
+            self.rooms = result
+        else:
+            self.rooms = None

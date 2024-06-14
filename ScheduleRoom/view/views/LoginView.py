@@ -1,16 +1,19 @@
-#from tkinter import ttk
 import tkinter as tk
 from scheduleroom.view.componentsFactory.ButtonFactory import ButtonFactory
 from scheduleroom.view.componentsFactory.InputFactory import InputFactory
 from scheduleroom.view.componentsFactory.LabelFactory import LabelFactory
 from scheduleroom.view.views.AbstractView import AbstractView
 from scheduleroom.view.views.ScheduleView import ScheduleView
+from scheduleroom.model.DAOs.UserDAO import UserDAO
+from scheduleroom.model.ConnectionFactory import ConnectionFactory
 
 class LoginView(AbstractView):
 
     def __init__(self, root):
 
         super().__init__(root)
+        self.root = root
+        self.root.title("Booking Room - Login")
         self.titulo = LabelFactory.createNormalLabel(self.main_container, "Realize seu login")
         self.titulo["font"] = ("Arial", "10", "bold")
         self.titulo.pack(pady=10)
@@ -38,7 +41,11 @@ class LoginView(AbstractView):
     def verificaSenha(self):
         usuario = self.nome.get()
         senha = self.senha.get()
-        if usuario == "aluno" and senha == "123":
+
+        conexao_db = ConnectionFactory.create_connection()
+        user_DAO = UserDAO(conexao_db)
+
+        if user_DAO.findUserLogin(usuario, senha):
             self.mensagem["text"] = "Autenticado"
             self.main_container.destroy()
             ScheduleView(self.root)

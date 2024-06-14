@@ -1,7 +1,8 @@
 import tkinter as tk
+from scheduleroom.view.views.AbstractView
 from tkinter import messagebox
 
-class QueryBookingView:
+class QueryBookingView(AbstractView):
     def __init__(self, root):
         self.root = root
         self.root.title("Confirmação de Dados")

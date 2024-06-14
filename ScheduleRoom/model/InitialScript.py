@@ -1,4 +1,6 @@
-from ConnectionFactory import ConnectionFactory
+from scheduleroom.model.ConnectionFactory import ConnectionFactory
+
+print("Criando dados no banco...")
 
 connection = ConnectionFactory.create_connection()
 
@@ -59,3 +61,5 @@ cursor.execute('''INSERT INTO rqst_bkng VALUES (1, "Aula de Python", 1, 1, "Aula
 
 connection.commit()
 connection.close()
+
+print("Dados criados com sucesso!")
