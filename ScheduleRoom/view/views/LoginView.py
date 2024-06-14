@@ -1,56 +1,47 @@
-from tkinter import ttk
-from scheduleroom.view.components.PrimaryButton import PrimaryButton
+#from tkinter import ttk
+import tkinter as tk
+from scheduleroom.view.componentsFactory.ButtonFactory import ButtonFactory
+from scheduleroom.view.componentsFactory.InputFactory import InputFactory
+from scheduleroom.view.componentsFactory.LabelFactory import LabelFactory
 from scheduleroom.view.views.AbstractView import AbstractView
+from scheduleroom.view.views.ScheduleView import ScheduleView
 
 class LoginView(AbstractView):
 
     def __init__(self, root):
 
         super().__init__(root)
-
-        self.fontePadrao = ("Arial", "10")
-
-        self.titulo = ttk.Label(self.main_container, text="Realize seu Login", background="#0B5394",foreground="white")
+        self.titulo = LabelFactory.createNormalLabel(self.main_container, "Realize seu login")
         self.titulo["font"] = ("Arial", "10", "bold")
-        self.titulo.pack()
+        self.titulo.pack(pady=10)
 
-        self.nomeLabel = ttk.Label(self.main_container,text="Login", font=self.fontePadrao,background="#0B5394",foreground="white")
-        self.nomeLabel.pack(side=LEFT)
+        self.nomeLabel = LabelFactory.createNormalLabel(self.main_container, "Usuário")
+        self.nomeLabel.pack()
 
-        self.nome = ttk.Entry(self.main_container)
-        self.nome["width"] = 30
-        self.nome["font"] = self.fontePadrao
-        self.nome.pack(side=LEFT)
+        self.nome = InputFactory.createInputText(self.main_container)
+        self.nome.pack()
 
-        self.senhaLabel = ttk.Label(self.main_container, text="Senha", font=self.fontePadrao,background="#0B5394",foreground="white")
-        self.senhaLabel.pack(side=LEFT)
+        self.senhaLabel = LabelFactory.createNormalLabel(self.main_container, "Senha")
+        self.senhaLabel.pack()
 
-        self.senha = ttk.Entry(self.main_container,)
-        self.senha["width"] = 30
-        self.senha["font"] = self.fontePadrao
-        self.senha["show"] = "*"
-        self.senha.pack(side=LEFT)
+        self.senha = InputFactory.createInputSecret(self.main_container)
+        self.senha.pack()
 
-        self.autenticar = PrimaryButton("Fazer Login", self.verificaSenha, self.quartoContainer)
-        # self.autenticar = Button(self.quartoContainer, background="#29a649", foreground="white")
-        # self.autenticar["text"] = "Fazer Login"
-        # self.autenticar["font"] = ("Calibri", "8")
-        # self.autenticar["width"] = 12
-        # self.autenticar["command"] = self.verificaSenha
-        # self.autenticar.pack()
+        self.autenticar = ButtonFactory.createPrimaryButton("Fazer Login", self.verificaSenha, self.main_container)
+        self.autenticar.pack()
 
-        self.mensagem = Label(self.quartoContainer, text="", font=self.fontePadrao,background="#0B5394",foreground="white")
+        self.mensagem = LabelFactory.createNormalLabel(self.main_container, "")
         self.mensagem.pack()
 
+        self.main_container.pack(expand=True)
 
     def verificaSenha(self):
         usuario = self.nome.get()
         senha = self.senha.get()
         if usuario == "aluno" and senha == "123":
             self.mensagem["text"] = "Autenticado"
-            self.primeiroContainer.destroy()
-            self.segundoContainer.destroy()
-            self.terceiroContainer.destroy()
-            self.quartoContainer.destroy()
+            self.main_container.destroy()
+            ScheduleView(self.root)
+
         else:
             self.mensagem["text"] = "Erro na autenticação"
